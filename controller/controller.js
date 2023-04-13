@@ -1,5 +1,6 @@
 import { userModel } from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // Create user
 export const addUser = async (req, res) => {
@@ -16,7 +17,12 @@ export const addUser = async (req, res) => {
         password: password,
       });
       newUser.save().then((response) => {
-        res.status(201).json({ success: true, user: response });
+        const token = jwt.sign(
+          { id: response._id },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: "1d" }
+        );
+        res.status(201).json({ success: true, user: response, token: token });
       });
     }
   } catch (err) {
@@ -36,7 +42,12 @@ export const login = async (req, res) => {
         userExist.password
       );
       if (correctPassword) {
-        res.status(200).json({ success: true ,user:userExist});
+        const token = jwt.sign(
+          { id: userExist._id },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: "1d" }
+        );
+        res.status(200).json({ success: true, user: userExist, token: token });
       } else {
         res.status(200).json({ success: false });
       }
