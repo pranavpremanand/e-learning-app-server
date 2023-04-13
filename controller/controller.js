@@ -8,7 +8,7 @@ export const addUser = async (req, res) => {
     let { email, password, name } = req.body;
     const userExist = await userModel.findOne({ email: email });
     if (userExist) {
-      res.status(200).json({ success: false });
+      res.status(200).json({ success: false,message:'User already exist' });
     } else {
       password = await bcrypt.hash(password, 10);
       const newUser = userModel({
@@ -26,7 +26,6 @@ export const addUser = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
     res.status(500).json(err);
   }
 };
@@ -49,10 +48,10 @@ export const login = async (req, res) => {
         );
         res.status(200).json({ success: true, user: userExist, token: token });
       } else {
-        res.status(200).json({ success: false });
+        res.status(200).json({ success: false,message:'Incorrect password' });
       }
     } else {
-      res.status(200).json({ success: false });
+      res.status(200).json({ success: false,message:"User doesn't exist" });
     }
   } catch (err) {
     res.status(500).json(err);
