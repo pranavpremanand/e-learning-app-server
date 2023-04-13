@@ -3,7 +3,7 @@ import cors from "cors";
 import route from "./routes/route.js";
 import dotenv from "dotenv";
 dotenv.config();
-import connection from "./config/connection.js";
+import dbConnection from "./config/dbConnection.js";
 
 const app = express();
 app.use(cors());
